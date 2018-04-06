@@ -552,78 +552,72 @@ namespace ModuleManagerTests
             UrlDir.UrlConfig config1 = UrlBuilder.CreateConfig(new TestConfigNode("PART")
             {
                 { "name", "000" },
-                { "aaa", "001" },
+                { "aa", "001" },
             }, file);
             
-            UrlDir.UrlConfig patch1 = new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
-            {
-                { "bbb", "002" },
-            });
+            UrlDir.UrlConfig[] patches = {
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "bb", "002" },
+                }),
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "cc", "003" },
+                }),
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "dd", "004" },
+                }),
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "ee", "005" },
+                }),
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "ff", "006" },
+                }),
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "gg", "007" },
+                }),
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "hh", "008" },
+                }),
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "ii", "009" },
+                }),
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "jj", "010" },
+                }),
+            };
 
-            UrlDir.UrlConfig patch2 = new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
-            {
-                { "ccc", "003" },
-            });
-
-            UrlDir.UrlConfig patch3 = new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
-            {
-                { "ddd", "004" },
-            });
-
-            UrlDir.UrlConfig patch4 = new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
-            {
-                { "eee", "005" },
-            });
-
-            UrlDir.UrlConfig patch5 = new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
-            {
-                { "fff", "006" },
-            });
-
-            UrlDir.UrlConfig patch6 = new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
-            {
-                { "ggg", "007" },
-            });
-
-            UrlDir.UrlConfig patch7 = new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
-            {
-                { "hhh", "008" },
-            });
-
-            UrlDir.UrlConfig patch8 = new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
-            {
-                { "iii", "009" },
-            });
-
-            UrlDir.UrlConfig patch9 = new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
-            {
-                { "jjj", "010" },
-            });
-
-            patchList.firstPatches.Add(patch1);
-            patchList.legacyPatches.Add(patch2);
-            patchList.modPasses["mod1"].beforePatches.Add(patch3);
-            patchList.modPasses["mod1"].forPatches.Add(patch4);
-            patchList.modPasses["mod1"].afterPatches.Add(patch5);
-            patchList.modPasses["mod2"].beforePatches.Add(patch6);
-            patchList.modPasses["mod2"].forPatches.Add(patch7);
-            patchList.modPasses["mod2"].afterPatches.Add(patch8);
-            patchList.finalPatches.Add(patch9);
+            patchList.firstPatches.Add(patches[0]);
+            patchList.legacyPatches.Add(patches[1]);
+            patchList.modPasses["mod1"].beforePatches.Add(patches[2]);
+            patchList.modPasses["mod1"].forPatches.Add(patches[3]);
+            patchList.modPasses["mod1"].afterPatches.Add(patches[4]);
+            patchList.modPasses["mod2"].beforePatches.Add(patches[5]);
+            patchList.modPasses["mod2"].forPatches.Add(patches[6]);
+            patchList.modPasses["mod2"].afterPatches.Add(patches[7]);
+            patchList.finalPatches.Add(patches[8]);
 
             patchApplier.ApplyPatches();
 
             EnsureNoErrors();
 
-            progress.Received(9).PatchApplied();
-            progress.Received().ApplyingUpdate(config1, patch1);
-            progress.Received().ApplyingUpdate(config1, patch2);
-            progress.Received().ApplyingUpdate(config1, patch3);
-            progress.Received().ApplyingUpdate(config1, patch4);
-            progress.Received().ApplyingUpdate(config1, patch5);
-            progress.Received().ApplyingUpdate(config1, patch6);
-            progress.Received().ApplyingUpdate(config1, patch7);
-            progress.Received().ApplyingUpdate(config1, patch8);
-            progress.Received().ApplyingUpdate(config1, patch9);
+            progress.Received(patches.Length).PatchApplied();
+            progress.Received().ApplyingUpdate(config1, patches[0]);
+            progress.Received().ApplyingUpdate(config1, patches[1]);
+            progress.Received().ApplyingUpdate(config1, patches[2]);
+            progress.Received().ApplyingUpdate(config1, patches[3]);
+            progress.Received().ApplyingUpdate(config1, patches[4]);
+            progress.Received().ApplyingUpdate(config1, patches[5]);
+            progress.Received().ApplyingUpdate(config1, patches[6]);
+            progress.Received().ApplyingUpdate(config1, patches[7]);
+            progress.Received().ApplyingUpdate(config1, patches[8]);
 
             UrlDir.UrlConfig[] allConfigs = databaseRoot.AllConfigs.ToArray();
             Assert.Equal(1, allConfigs.Length);
@@ -631,16 +625,16 @@ namespace ModuleManagerTests
             AssertNodesEqual(new TestConfigNode("PART")
             {
                 { "name", "000" },
-                { "aaa", "001" },
-                { "bbb", "002" },
-                { "ccc", "003" },
-                { "ddd", "004" },
-                { "eee", "005" },
-                { "fff", "006" },
-                { "ggg", "007" },
-                { "hhh", "008" },
-                { "iii", "009" },
-                { "jjj", "010" },
+                { "aa", "001" },
+                { "bb", "002" },
+                { "cc", "003" },
+                { "dd", "004" },
+                { "ee", "005" },
+                { "ff", "006" },
+                { "gg", "007" },
+                { "hh", "008" },
+                { "ii", "009" },
+                { "jj", "010" },
             }, allConfigs[0].config);
         }
 
