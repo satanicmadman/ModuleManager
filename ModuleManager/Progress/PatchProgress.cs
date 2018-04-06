@@ -95,6 +95,12 @@ namespace ModuleManager.Progress
             Counter.needsUnsatisfied.Increment();
         }
 
+        public void NeedsUnsatisfiedLast(UrlDir.UrlConfig url)
+        {
+            logger.Info($"Deleting root node in file {url.parent.url} node: {url.type} as it can't satisfy its LAST");
+            Counter.needsUnsatisfied.Increment();
+        }
+
         public void Error(UrlDir.UrlConfig url, string message)
         {
             Counter.errors.Increment();

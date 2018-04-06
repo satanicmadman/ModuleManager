@@ -78,6 +78,14 @@ namespace ModuleManagerTests
                 CreateConfig("@NADE:AFTER[MOD1]"),
             };
 
+            UrlDir.UrlConfig[] lastMod1Configs =
+            {
+                CreateConfig("@NODE:LAST[mod1]"),
+                CreateConfig("@NODE[foo]:HAS[#bar]:LAST[mod1]"),
+                CreateConfig("@NADE:last[mod1]"),
+                CreateConfig("@NADE:LAST[MOD1]"),
+            };
+
             UrlDir.UrlConfig[] beforeMod2Configs =
             {
                 CreateConfig("@NODE:BEFORE[mod2]"),
@@ -102,6 +110,14 @@ namespace ModuleManagerTests
                 CreateConfig("@NADE:AFTER[MOD2]"),
             };
 
+            UrlDir.UrlConfig[] lastMod2Configs =
+            {
+                CreateConfig("@NODE:LAST[mod2]"),
+                CreateConfig("@NODE[foo]:HAS[#bar]:LAST[mod2]"),
+                CreateConfig("@NADE:last[mod2]"),
+                CreateConfig("@NADE:LAST[MOD2]"),
+            };
+
             UrlDir.UrlConfig[] beforeMod3Configs =
             {
                 CreateConfig("@NODE:BEFORE[mod3]"),
@@ -124,6 +140,14 @@ namespace ModuleManagerTests
                 CreateConfig("@NODE[foo]:HAS[#bar]:AFTER[mod3]"),
                 CreateConfig("@NADE:after[mod3]"),
                 CreateConfig("@NADE:AFTER[MOD3]"),
+            };
+
+            UrlDir.UrlConfig[] lastMod3Configs =
+            {
+                CreateConfig("@NODE:LAST[mod3]"),
+                CreateConfig("@NODE[foo]:HAS[#bar]:LAST[mod3]"),
+                CreateConfig("@NADE:last[mod3]"),
+                CreateConfig("@NADE:LAST[MOD3]"),
             };
 
             string[] modList = { "mod1", "mod2" };
@@ -178,6 +202,13 @@ namespace ModuleManagerTests
             AssertUrlCorrect("@NADE",                afterMod1Configs[2], currentPatches[2]);
             AssertUrlCorrect("@NADE",                afterMod1Configs[3], currentPatches[3]);
 
+            currentPatches = list.modPasses["mod1"].lastPatches;
+            Assert.Equal(lastMod1Configs.Length, currentPatches.Count);
+            AssertUrlCorrect("@NODE", lastMod1Configs[0], currentPatches[0]);
+            AssertUrlCorrect("@NODE[foo]:HAS[#bar]", lastMod1Configs[1], currentPatches[1]);
+            AssertUrlCorrect("@NADE", lastMod1Configs[2], currentPatches[2]);
+            AssertUrlCorrect("@NADE", lastMod1Configs[3], currentPatches[3]);
+
             currentPatches = list.modPasses["mod2"].beforePatches;
             Assert.Equal(beforeMod2Configs.Length, currentPatches.Count);
             AssertUrlCorrect("@NODE",                beforeMod2Configs[0], currentPatches[0]);
@@ -199,7 +230,14 @@ namespace ModuleManagerTests
             AssertUrlCorrect("@NADE",                afterMod2Configs[2], currentPatches[2]);
             AssertUrlCorrect("@NADE",                afterMod2Configs[3], currentPatches[3]);
 
-            progress.Received(34).PatchAdded();
+            currentPatches = list.modPasses["mod2"].lastPatches;
+            Assert.Equal(lastMod2Configs.Length, currentPatches.Count);
+            AssertUrlCorrect("@NODE", lastMod2Configs[0], currentPatches[0]);
+            AssertUrlCorrect("@NODE[foo]:HAS[#bar]", lastMod2Configs[1], currentPatches[1]);
+            AssertUrlCorrect("@NADE", lastMod2Configs[2], currentPatches[2]);
+            AssertUrlCorrect("@NADE", lastMod2Configs[3], currentPatches[3]);
+
+            progress.Received(42).PatchAdded();
 
             progress.Received().NeedsUnsatisfiedBefore(beforeMod3Configs[0]);
             progress.Received().NeedsUnsatisfiedBefore(beforeMod3Configs[1]);
@@ -215,6 +253,11 @@ namespace ModuleManagerTests
             progress.Received().NeedsUnsatisfiedAfter(afterMod3Configs[1]);
             progress.Received().NeedsUnsatisfiedAfter(afterMod3Configs[2]);
             progress.Received().NeedsUnsatisfiedAfter(afterMod3Configs[3]);
+
+            progress.Received().NeedsUnsatisfiedLast(lastMod3Configs[0]);
+            progress.Received().NeedsUnsatisfiedLast(lastMod3Configs[1]);
+            progress.Received().NeedsUnsatisfiedLast(lastMod3Configs[2]);
+            progress.Received().NeedsUnsatisfiedLast(lastMod3Configs[3]);
         }
 
         [Fact]

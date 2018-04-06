@@ -592,6 +592,14 @@ namespace ModuleManagerTests
                 {
                     { "jj", "010" },
                 }),
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "kk", "011" },
+                }),
+                new UrlDir.UrlConfig(file, new TestConfigNode("@PART[000|0*2]")
+                {
+                    { "ll", "012" },
+                }),
             };
 
             patchList.firstPatches.Add(patches[0]);
@@ -602,7 +610,9 @@ namespace ModuleManagerTests
             patchList.modPasses["mod2"].beforePatches.Add(patches[5]);
             patchList.modPasses["mod2"].forPatches.Add(patches[6]);
             patchList.modPasses["mod2"].afterPatches.Add(patches[7]);
-            patchList.finalPatches.Add(patches[8]);
+            patchList.modPasses["mod1"].lastPatches.Add(patches[8]);
+            patchList.modPasses["mod2"].lastPatches.Add(patches[9]);
+            patchList.finalPatches.Add(patches[10]);
 
             patchApplier.ApplyPatches();
 
@@ -618,6 +628,8 @@ namespace ModuleManagerTests
             progress.Received().ApplyingUpdate(config1, patches[6]);
             progress.Received().ApplyingUpdate(config1, patches[7]);
             progress.Received().ApplyingUpdate(config1, patches[8]);
+            progress.Received().ApplyingUpdate(config1, patches[9]);
+            progress.Received().ApplyingUpdate(config1, patches[10]);
 
             UrlDir.UrlConfig[] allConfigs = databaseRoot.AllConfigs.ToArray();
             Assert.Equal(1, allConfigs.Length);
@@ -635,6 +647,8 @@ namespace ModuleManagerTests
                 { "hh", "008" },
                 { "ii", "009" },
                 { "jj", "010" },
+                { "kk", "011" },
+                { "ll", "012" },
             }, allConfigs[0].config);
         }
 

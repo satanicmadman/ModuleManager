@@ -18,6 +18,7 @@ namespace ModuleManager.Progress
         void NeedsUnsatisfiedBefore(UrlDir.UrlConfig url);
         void NeedsUnsatisfiedFor(UrlDir.UrlConfig url);
         void NeedsUnsatisfiedAfter(UrlDir.UrlConfig url);
+        void NeedsUnsatisfiedLast(UrlDir.UrlConfig url);
         void ApplyingCopy(UrlDir.UrlConfig original, UrlDir.UrlConfig patch);
         void ApplyingDelete(UrlDir.UrlConfig original, UrlDir.UrlConfig patch);
         void ApplyingUpdate(UrlDir.UrlConfig original, UrlDir.UrlConfig patch);

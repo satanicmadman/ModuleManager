@@ -56,6 +56,8 @@ namespace ModuleManagerTests
             Assert.Equal(0, pass1.forPatches.Capacity);
             Assert.NotNull(pass1.afterPatches);
             Assert.Equal(0, pass1.afterPatches.Capacity);
+            Assert.NotNull(pass1.lastPatches);
+            Assert.Equal(0, pass1.lastPatches.Capacity);
 
             PatchList.ModPass pass2 = list.modPasses["mod2"];
             Assert.NotNull(pass2);
@@ -66,6 +68,8 @@ namespace ModuleManagerTests
             Assert.Equal(0, pass2.forPatches.Capacity);
             Assert.NotNull(pass2.afterPatches);
             Assert.Equal(0, pass2.afterPatches.Capacity);
+            Assert.NotNull(pass2.lastPatches);
+            Assert.Equal(0, pass2.lastPatches.Capacity);
 
             Assert.Throws<KeyNotFoundException>(delegate
             {

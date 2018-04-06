@@ -45,6 +45,13 @@ namespace ModuleManager
                 ApplyPatches($":AFTER[{upperModName}]", pass.afterPatches);
             }
 
+            // Need another loop here since these should all run after BEFORE/FOR/AFTER for every mod
+            foreach (PatchList.ModPass pass in patchList.modPasses)
+            {
+                string upperModName = pass.name.ToUpper();
+                ApplyPatches($":LAST[{upperModName}]", pass.lastPatches);
+            }
+
             // :Final node
             ApplyPatches(":FINAL", patchList.finalPatches);
         }

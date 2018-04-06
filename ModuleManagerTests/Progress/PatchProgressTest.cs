@@ -220,6 +220,23 @@ namespace ModuleManagerTests
         }
 
         [Fact]
+        public void TestNeedsUnsatisfiedLast()
+        {
+            UrlDir.UrlConfig config1 = UrlBuilder.CreateConfig("abc/def", new ConfigNode("SOME_NODE"));
+            UrlDir.UrlConfig config2 = UrlBuilder.CreateConfig("ghi/jkl", new ConfigNode("SOME_OTHER_NODE"));
+
+            Assert.Equal(0, progress.Counter.needsUnsatisfied);
+
+            progress.NeedsUnsatisfiedLast(config1);
+            Assert.Equal(1, progress.Counter.needsUnsatisfied);
+            logger.Received().Log(LogType.Log, "Deleting root node in file abc/def node: SOME_NODE as it can't satisfy its LAST");
+
+            progress.NeedsUnsatisfiedLast(config2);
+            Assert.Equal(2, progress.Counter.needsUnsatisfied);
+            logger.Received().Log(LogType.Log, "Deleting root node in file ghi/jkl node: SOME_OTHER_NODE as it can't satisfy its LAST");
+        }
+
+        [Fact]
         public void TestError()
         {
             UrlDir.UrlConfig config1 = UrlBuilder.CreateConfig("abc/def", new ConfigNode("SOME_NODE"));

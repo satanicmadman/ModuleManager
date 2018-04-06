@@ -13,6 +13,7 @@ namespace ModuleManager
             public readonly List<UrlDir.UrlConfig> beforePatches = new List<UrlDir.UrlConfig>(0);
             public readonly List<UrlDir.UrlConfig> forPatches = new List<UrlDir.UrlConfig>(0);
             public readonly List<UrlDir.UrlConfig> afterPatches = new List<UrlDir.UrlConfig>(0);
+            public readonly List<UrlDir.UrlConfig> lastPatches = new List<UrlDir.UrlConfig>(0);
 
             public readonly string name;
 

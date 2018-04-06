@@ -14,6 +14,7 @@ namespace ModuleManager
         private static readonly Regex beforeRegex = new Regex(@":BEFORE(?:\[([^\[\]]+)\])?", RegexOptions.IgnoreCase);
         private static readonly Regex forRegex = new Regex(@":FOR(?:\[([^\[\]]+)\])?", RegexOptions.IgnoreCase);
         private static readonly Regex afterRegex = new Regex(@":AFTER(?:\[([^\[\]]+)\])?", RegexOptions.IgnoreCase);
+        private static readonly Regex lastRegex = new Regex(@":LAST(?:\[([^\[\]]+)\])?", RegexOptions.IgnoreCase);
 
         public static PatchList SortAndExtractPatches(UrlDir databaseRoot, IEnumerable<string> modList, IPatchProgress progress)
         {
@@ -38,6 +39,7 @@ namespace ModuleManager
                     Match beforeMatch = beforeRegex.Match(url.type);
                     Match forMatch = forRegex.Match(url.type);
                     Match afterMatch = afterRegex.Match(url.type);
+                    Match lastMatch = lastRegex.Match(url.type);
 
                     int matchCount = 0;
 
@@ -46,12 +48,14 @@ namespace ModuleManager
                     if (beforeMatch.Success) matchCount++;
                     if (forMatch.Success) matchCount++;
                     if (afterMatch.Success) matchCount++;
+                    if (lastMatch.Success) matchCount++;
 
                     if (firstMatch.NextMatch().Success) matchCount++;
                     if (finalMatch.NextMatch().Success) matchCount++;
                     if (beforeMatch.NextMatch().Success) matchCount++;
                     if (forMatch.NextMatch().Success) matchCount++;
                     if (afterMatch.NextMatch().Success) matchCount++;
+                    if (lastMatch.NextMatch().Success) matchCount++;
 
                     bool error = false;
 
@@ -104,6 +108,11 @@ namespace ModuleManager
                     if (afterMatch.Success && !afterMatch.Groups[1].Success)
                     {
                         progress.Error(url, "Error - malformed :AFTER patch specifier detected: " + url.SafeUrl());
+                        error = true;
+                    }
+                    if (lastMatch.Success && !lastMatch.Groups[1].Success)
+                    {
+                        progress.Error(url, "Error - malformed :LAST patch specifier detected: " + url.SafeUrl());
                         error = true;
                     }
                     if (error)
@@ -167,6 +176,19 @@ namespace ModuleManager
                         {
                             modNotFound = true;
                             progress.NeedsUnsatisfiedAfter(url);
+                        }
+                    }
+                    else if (lastMatch.Success)
+                    {
+                        if (CheckMod(lastMatch, list.modPasses, out string theMod))
+                        {
+                            theMatch = lastMatch;
+                            thePass = list.modPasses[theMod].lastPatches;
+                        }
+                        else
+                        {
+                            modNotFound = true;
+                            progress.NeedsUnsatisfiedLast(url);
                         }
                     }
                     else
